@@ -7,7 +7,7 @@ var cheerio = require("cheerio");
 var axios = require("axios");
 var request = require("request");
 
-var db = require("./models");
+// var models = require("./models");
 
 var PORT = 3000;
 var app = express();
@@ -24,10 +24,15 @@ app.set("view engine", "handlebars");
 var routes = require("./routes/index.js");
 app.use(routes);
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/huffPostScrapedb";
+var databaseUri = "mongodb://localhost/huffPostScrapedb";
+var MONGODB_URI = process.env.MONGODB_URI
 mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI, {});
 
+if (MONGODB_URI){
+  mongoose.connect(MONGODB_URI);
+} else {
+  mongoose.connect(databaseUri);
+};
 
 app.listen(PORT, function(){
   console.log("App running on port " + PORT + "!");

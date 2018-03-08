@@ -1,4 +1,4 @@
-var db = require("./models");
+var db = require("../models");
 
 var Scrape = function scrapeFunction(req, res){
     axios.get("https://www.huffingtonpost.com/topic/social-justice/").then(function(response) {
