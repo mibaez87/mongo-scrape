@@ -1,32 +1,35 @@
+var express = require("express");
+var bodyParser = require("body-parser");
+var logger = require("morgan");
+var mongoose = require("mongoose");
+
 var cheerio = require("cheerio");
+var axios = require("axios");
 var request = require("request");
 
-console.log("\n***********************************\n" +
-            "Grabbing every article title and link\n" +
-            "from Huffington Post's social justice articles:" +
-            "\n***********************************\n");
+var db = require("./models");
 
-request("https://www.huffingtonpost.com/topic/social-justice", function(error, response, html) {
+var PORT = 3000;
+var app = express();
 
-  var $ = cheerio.load(html);
-  var results = [];
+app.use(logger("dev"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static("public"));
+app.use(bodyParser.json());
 
-  $("div.card__headline").each(function(i, element) {
-    var title = $(element).text().trim();
-    var link = $(element).children().attr("href");
-    results.push({
-      title: title,
-      link: link
-    });
-  });
+mongoose.Promise = Promise;
+mongoose.connect("mongodb://localhost/huffPostScrapedb");
 
-  // RETURNING UNDEFINED
-  // $("div.card__image").each(function(i, element) {
-  //   var image = $(element).children().attr("img");
-  //   results.push({
-  //     image: image
-  //   });
-  // });
+var exphbs = require("express-handlebars");
 
-  console.log(results);
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+var routes = require("./controllers/burgers_controller.js");
+
+app.use(routes);
+
+app.listen(PORT, function(){
+  console.log("App running on port " + PORT + "!");
 });
+
