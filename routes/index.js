@@ -3,7 +3,11 @@ var scrapeFunction = require("../scripts/scrape.js");
 var Headline = require("../models/Headline.js")
 var allHeadlines = require("../controllers/headline.js");
 
-app.get("/scrape", scrapeFunction);
+module.exports = function(app){
+    var router = require("express").Router();
 
-app.get("/headlines", allHeadlines);
+    router.get("/allHeadlines", scrapeFunction);
+};
+
+// app.get("/headlines", allHeadlines);
 

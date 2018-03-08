@@ -21,8 +21,7 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-var routes = require("./routes/index.js");
-app.use(routes);
+app.use("/", require("./routes")());
 
 var databaseUri = "mongodb://localhost/huffPostScrapedb";
 var MONGODB_URI = process.env.MONGODB_URI
